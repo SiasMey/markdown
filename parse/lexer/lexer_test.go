@@ -52,3 +52,15 @@ func TestScanShouldReturnRightBrc(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
 	}
 }
+
+func TestScanShouldReturnOpenTag(t *testing.T) {
+	input := "#[["
+	expect := TAGOPEN
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}

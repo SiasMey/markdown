@@ -12,7 +12,8 @@ const (
 
 	HASH Token = 2
 	WIKIOPEN Token = 3
-	RIGHTBRC Token = 4
+	TAGOPEN Token = 4
+	RIGHTBRC Token = 5
 )
 
 type Scanner struct {
@@ -45,6 +46,16 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		} else {
 			s.unread()
 			return RIGHTBRC, "["
+		}
+	}
+
+	if ch == '#' {
+		next := s.read()
+		if next == '[' {
+			next2 := s.read()
+			if next2 == '[' {
+				return TAGOPEN, "#[["
+			}
 		}
 	}
 
