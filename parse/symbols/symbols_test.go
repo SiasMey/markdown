@@ -25,6 +25,16 @@ func TestSymbolsShouldReturnTitleCharStart(t *testing.T) {
 	}
 }
 
+func TestSymbolsShouldReturnTitleCharEnd(t *testing.T) {
+	input := "# Title"
+	expected := len(input)
+
+	res, err := Extract(input)
+	if res.Title.CharEnd != expected {
+		failMessageInt(t, input, res.Title.CharEnd, err, expected)
+	}
+}
+
 func TestSymbolsShouldReturnWikilinks(t *testing.T) {
 	input := "[[wikilink]]"
 	expected := "wikilink"
