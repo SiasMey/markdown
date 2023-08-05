@@ -31,6 +31,24 @@ func TestSymbolsShouldReturnTitle(t *testing.T) {
 	}
 }
 
+func TestSymbolsShouldReturnTitleCharStart(t *testing.T) {
+	input := "# Title"
+	expected := 0
+
+	res, err := Extract(input)
+	if res.Title.CharStart != expected {
+		t.Fatalf(`Extract(%s) = %d, %v, expected %d`, input, res.Title.CharStart, err, expected)
+	}
+}
+
+func failMessageString(t *testing.T, input string, result string, err error, expected string) {
+	t.Fatalf(`Extract(%s) = %q, %v, expected %s`, input, result, err, expected)
+}
+
+func failMessageInt(t *testing.T, input string, result int, err error, expected int) {
+	t.Fatalf(`Extract(%s) = %d, %v, expected %d`, input, result, err, expected)
+}
+
 func TestSymbolsShouldReturnWikilinks(t *testing.T) {
 	input := "[[wikilink]]"
 	expected := "wikilink"

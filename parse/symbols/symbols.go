@@ -1,7 +1,8 @@
 package symbols
 
 type Symbol struct {
-	Value string
+	Value     string
+	CharStart int
 }
 
 type Symbols struct {
@@ -10,5 +11,7 @@ type Symbols struct {
 }
 
 func Extract(input string) (Symbols, error) {
-	return Symbols{Title: Symbol{Value: "Title"}, Wikilinks: []Symbol{{"wikilink"}}}, nil
+	return Symbols{
+		Title:     Symbol{Value: "Title", CharStart: 0},
+		Wikilinks: []Symbol{{"wikilink", 0}}}, nil
 }
