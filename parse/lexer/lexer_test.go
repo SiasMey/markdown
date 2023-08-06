@@ -41,6 +41,18 @@ func TestScanShouldReturnLitHash(t *testing.T) {
 	}
 }
 
+func TestScanShouldReturnCongtiguousHashLit(t *testing.T) {
+	input := "###"
+	expect := "###"
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
+	}
+}
+
 func TestScanShouldReturnWikiOpen(t *testing.T) {
 	input := "[["
 	expect := WIKIOPEN

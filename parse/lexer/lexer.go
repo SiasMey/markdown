@@ -68,7 +68,8 @@ func (s *Scanner) Scan() (Token, string) {
 
 	switch ch {
 	case '#':
-		return HASH, string(ch)
+		s.unread()
+		return s.scanHash()
 	case eof:
 		return EOF, string(ch)
 	}
@@ -110,6 +111,24 @@ func isText(ch rune) bool {
 
 func isWhiteSpace(ch rune) bool {
 	return ch == ' '
+}
+
+func (s *Scanner) scanHash() (Token, string) {
+	var buf bytes.Buffer
+	buf.WriteRune(s.read())
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if ch != '#' {
+			s.unread()
+			break
+		} else {
+			_, _ = buf.WriteRune(ch)
+		}
+	}
+
+	return HASH, buf.String()
 }
 
 func (s *Scanner) scanWhiteSpace() (Token, string) {
