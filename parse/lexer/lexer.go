@@ -41,7 +41,7 @@ func (s *Scanner) read() rune {
 func (s *Scanner) unread() {
 	err := s.r.UnreadRune()
 	if err != nil {
-		logger.Print("Error during unread rune", err)
+		logger.Print("ERROR: unread rune", err)
 	}
 }
 
