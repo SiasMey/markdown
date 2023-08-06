@@ -5,151 +5,6 @@ import (
 	"testing"
 )
 
-func TestScanShouldReturnLitHash(t *testing.T) {
-	input := "#"
-	expect := "#"
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnCongtiguousHashLit(t *testing.T) {
-	input := "###"
-	expect := "###"
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextLit(t *testing.T) {
-	input := "AlphaGroup"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextSlugLit(t *testing.T) {
-	input := "text-slug-test"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextUnderCaseLit(t *testing.T) {
-	input := "text_slug_test"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextWithNumbersLit(t *testing.T) {
-	input := "Alpha129Group"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextWithFullstopLit(t *testing.T) {
-	input := "Alpha.Fullstop"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnTextWithCommaLit(t *testing.T) {
-	input := "Alpha,Comma"
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnContiguosWSLit(t *testing.T) {
-	input := "      "
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnSingleNLLitLinux(t *testing.T) {
-	input := string('\n') + string('\n')
-	expect := string('\n')
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnSingleNLLitMac(t *testing.T) {
-	input := string('\r') + string('\r')
-	expect := string('\r')
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
-	}
-}
-
-func TestScanShouldReturnSingleNLLitWin(t *testing.T) {
-	input := string('\r') + string('\n')
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
-	}
-}
-
-// test tooling currently doesnt do well with this it seems
 func TestScanShouldReturnToken(t *testing.T) {
 	tests := map[string]struct {
 		input string
@@ -199,6 +54,34 @@ func TestScanShouldReturnLiteral(t *testing.T) {
 		"NLLinuxSingle":  {string('\n') + string('\n'), string('\n')},
 		"NLMacSingle":    {string('\r') + string('\r'), string('\r')},
 		"NLDosSingle":    {string('\r') + string('\n') + "more", string('\r') + string('\n')},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			lex := NewScanner(strings.NewReader(tc.input))
+			_, got := lex.Scan()
+			if got != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			}
+		})
+	}
+}
+
+func TestScanTextLiteralShouldNotOverrun(t *testing.T) {
+	tests := map[string]struct {
+		input string
+		want  string
+	}{
+		"LeftBrc":       {"ast[", "ast"},
+		"RightBrc":      {"ast]", "ast"},
+		"WikiOpen":      {"ast[[", "ast"},
+		"WikiClose":     {"ast]]", "ast"},
+		"Hash":          {"ast#", "ast"},
+		"WhiteSpace":    {"ast ", "ast"},
+		"WhiteSpaceTab": {"ast	", "ast"},
+		"NewlineNix":       {"ast" + string('\n'), "ast"},
+		"NewlineMac":       {"ast" + string('\r'), "ast"},
+		"NewlineDos":       {"ast" + string('\r') + string('\n'), "ast"},
 	}
 
 	for name, tc := range tests {
