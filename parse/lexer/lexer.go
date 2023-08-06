@@ -100,7 +100,7 @@ func (s *Scanner) unread() {
 }
 
 func isNewLine(ch rune) bool {
-	return ch == '\n'
+	return ch == '\n' || ch == '\r'
 }
 
 func isPunc(ch rune) bool {

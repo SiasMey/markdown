@@ -257,9 +257,21 @@ func TestScanShouldReturnWSTab(t *testing.T) {
 	}
 }
 
-func TestScanShouldReturnNL(t *testing.T) {
+func TestScanShouldReturnNLforLF(t *testing.T) {
 	input := `
 `
+	expect := NL
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnNLforCR(t *testing.T) {
+	input := string('\r')
 	expect := NL
 
 	lex := NewScanner(strings.NewReader(input))
