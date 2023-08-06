@@ -89,3 +89,51 @@ func TestScanShouldReturnRightBrc(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
 	}
 }
+
+func TestScanShouldReturnText(t *testing.T) {
+	input := "AlphaGroup"
+	expect := TEXT
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnTextLit(t *testing.T) {
+	input := "AlphaGroup"
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s` , input, expect, lit)
+	}
+}
+
+func TestScanShouldReturnTextWithNumbers(t *testing.T) {
+	input := "Alpha129Group"
+	expect := TEXT
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnTextWithNumbersLit(t *testing.T) {
+	input := "Alpha129Group"
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s` , input, expect, lit)
+	}
+}

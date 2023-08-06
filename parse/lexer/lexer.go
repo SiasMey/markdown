@@ -2,6 +2,7 @@ package lexer
 
 import (
 	"bufio"
+	"bytes"
 	"io"
 	"log"
 )
@@ -12,11 +13,12 @@ const (
 	ILLEGAL Token = -1
 	EOF     Token = 0
 
-	HASH      Token = 2
-	WIKIOPEN  Token = 3
-	LEFTBRC   Token = 4
-	RIGHTBRC  Token = 5
-	WIKICLOSE Token = 6
+	HASH       Token = 2
+	WIKIOPEN   Token = 3
+	LEFTBRC    Token = 4
+	RIGHTBRC   Token = 5
+	WIKICLOSE  Token = 6
+	TEXT Token = 7
 )
 
 type Scanner struct {
@@ -30,22 +32,7 @@ func NewScanner(r io.Reader) *Scanner {
 	return &Scanner{r: bufio.NewReader(r)}
 }
 
-func (s *Scanner) read() rune {
-	ch, _, err := s.r.ReadRune()
-	if err != nil {
-		return eof
-	}
-	return ch
-}
-
-func (s *Scanner) unread() {
-	err := s.r.UnreadRune()
-	if err != nil {
-		logger.Print("ERROR: unread rune", err)
-	}
-}
-
-func (s *Scanner) Scan() (tok Token, lit string) {
+func (s *Scanner) Scan() (Token, string) {
 	ch := s.read()
 
 	if ch == '[' {
@@ -68,6 +55,11 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		}
 	}
 
+	if isAlphaNum(ch) {
+		s.unread()
+		return s.scanAlphaGroup()
+	}
+
 	switch ch {
 	case '#':
 		return HASH, string(ch)
@@ -77,4 +69,41 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 
 	return ILLEGAL, string(ch)
 
+}
+
+func (s *Scanner) read() rune {
+	ch, _, err := s.r.ReadRune()
+	if err != nil {
+		return eof
+	}
+	return ch
+}
+
+func (s *Scanner) unread() {
+	err := s.r.UnreadRune()
+	if err != nil {
+		logger.Print("ERROR: unread rune", err)
+	}
+}
+
+func isAlphaNum(ch rune) bool {
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')
+}
+
+func (s *Scanner) scanAlphaGroup() (Token, string) {
+	var buf bytes.Buffer
+	buf.WriteRune(s.read())
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isAlphaNum(ch) {
+			s.unread()
+			break
+		} else {
+			_,_ = buf.WriteRune(ch)
+		}
+	}
+
+	return TEXT, buf.String()
 }
