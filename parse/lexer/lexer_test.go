@@ -113,6 +113,18 @@ func TestScanShouldReturnTextLit(t *testing.T) {
 	}
 }
 
+func TestScanShouldReturnTextSlugLit(t *testing.T) {
+	input := "text-slug-test"
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
+	}
+}
+
 func TestScanShouldReturnTextWithNumbers(t *testing.T) {
 	input := "Alpha129Group"
 	expect := TEXT
