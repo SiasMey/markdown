@@ -16,7 +16,7 @@ func TestScanShouldReturnToken(t *testing.T) {
 		"LeftBrc":        {"[", LEFTBRC},
 		"RightBrc":       {"]", RIGHTBRC},
 		"WikiClose":      {"]]", WIKICLOSE},
-		"Tick":      {"`", TICK},
+		"Tick":           {"`", TICK},
 		"Text":           {"abc", TEXT},
 		"TextSlug":       {"-b-c", TEXT},
 		"TextUnderscore": {"_b_c", TEXT},
@@ -78,11 +78,42 @@ func TestScanTextLiteralShouldNotOverrun(t *testing.T) {
 		"WikiOpen":      {"ast[[", "ast"},
 		"WikiClose":     {"ast]]", "ast"},
 		"Hash":          {"ast#", "ast"},
+		"TICK":          {"ast`", "ast"},
 		"WhiteSpace":    {"ast ", "ast"},
 		"WhiteSpaceTab": {"ast	", "ast"},
-		"NewlineNix":       {"ast" + string('\n'), "ast"},
-		"NewlineMac":       {"ast" + string('\r'), "ast"},
-		"NewlineDos":       {"ast" + string('\r') + string('\n'), "ast"},
+		"NewlineNix":    {"ast" + string('\n'), "ast"},
+		"NewlineMac":    {"ast" + string('\r'), "ast"},
+		"NewlineDos":    {"ast" + string('\r') + string('\n'), "ast"},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			lex := NewScanner(strings.NewReader(tc.input))
+			_, got := lex.Scan()
+			if got != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			}
+		})
+	}
+}
+
+func TestScanWhiteSpaceShouldNotOverrun(t *testing.T) {
+	tests := map[string]struct {
+		input string
+		want  string
+	}{
+		"SpaceLeftBrc":   {" [", " "},
+		"SpaceRightBrc":  {" ]", " "},
+		"SpaceWikiOpen":  {" [[", " "},
+		"SpaceWikiClose": {" ]]", " "},
+		"SpaceHash":      {" #", " "},
+		"SpaceTICK":      {" `", " "},
+		"TabLeftBrc":     {"	[", "	"},
+		"TabRightBrc":    {"	]", "	"},
+		"TabWikiOpen":    {"	[[", "	"},
+		"TabWikiClose":   {"	]]", "	"},
+		"TabHash":        {"	#", "	"},
+		"TabTICK":        {"	`", "	"},
 	}
 
 	for name, tc := range tests {
