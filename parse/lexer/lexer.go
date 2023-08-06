@@ -55,7 +55,7 @@ func (s *Scanner) Scan() (Token, string) {
 		}
 	}
 
-	if isAlphaNum(ch) {
+	if isText(ch) {
 		s.unread()
 		return s.scanAlphaGroup()
 	}
@@ -98,7 +98,7 @@ func isAlpha(ch rune) bool {
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
 }
 
-func isAlphaNum(ch rune) bool {
+func isText(ch rune) bool {
 	return isAlpha(ch) || isNum(ch) || isPunc(ch)
 }
 
@@ -109,7 +109,7 @@ func (s *Scanner) scanAlphaGroup() (Token, string) {
 	for {
 		if ch := s.read(); ch == eof {
 			break
-		} else if !isAlphaNum(ch) {
+		} else if !isText(ch) {
 			s.unread()
 			break
 		} else {
