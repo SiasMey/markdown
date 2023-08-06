@@ -86,8 +86,12 @@ func (s *Scanner) unread() {
 	}
 }
 
+func isPunc(ch rune) bool {
+	return ch == '.' || ch == ','
+}
+
 func isAlphaNum(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == '.' || ch == ','
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || isPunc(ch)
 }
 
 func (s *Scanner) scanAlphaGroup() (Token, string) {
