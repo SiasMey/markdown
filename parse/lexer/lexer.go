@@ -71,6 +71,8 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 	switch ch {
 	case '#':
 		return HASH, string(ch)
+	case eof:
+		return EOF, string(ch)
 	}
 
 	return ILLEGAL, string(ch)

@@ -5,6 +5,19 @@ import (
 	"testing"
 )
 
+
+func TestScanShouldReturnEof(t *testing.T) {
+	input := ""
+	expect := EOF
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}
+
 func TestScanShouldReturnHash(t *testing.T) {
 	input := "#"
 	expect := HASH
