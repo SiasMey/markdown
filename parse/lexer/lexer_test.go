@@ -182,3 +182,32 @@ func TestScanShouldReturnToken(t *testing.T) {
 		})
 	}
 }
+
+func TestScanShouldReturnLiteral(t *testing.T) {
+	tests := map[string]struct {
+		input string
+		want  string
+	}{
+		"Hash":           {"#", "#"},
+		"HashContiguous": {"###", "###"},
+		"Text":           {"abc", "abc"},
+		"TextSlug":       {"a-b-c", "a-b-c"},
+		"TextUnderscore": {"a_b_c", "a_b_c"},
+		"TextNumbers":    {"925abc", "925abc"},
+		"WSContiguous":   {"   ", "   "},
+		"WSWithTab":      {"  	", "  	"},
+		"NLLinuxSingle":  {string('\n') + string('\n'), string('\n')},
+		"NLMacSingle":    {string('\r') + string('\r'), string('\r')},
+		"NLDosSingle":    {string('\r') + string('\n') + "more", string('\r') + string('\n')},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			lex := NewScanner(strings.NewReader(tc.input))
+			_, got := lex.Scan()
+			if got != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			}
+		})
+	}
+}
