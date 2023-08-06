@@ -244,3 +244,28 @@ func TestScanShouldReturnContiguosWSLit(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
+
+func TestScanShouldReturnWSTab(t *testing.T) {
+	input := "	"
+	expect := WS
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnNL(t *testing.T) {
+	input := `
+`
+	expect := NL
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}

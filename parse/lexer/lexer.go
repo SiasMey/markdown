@@ -20,6 +20,7 @@ const (
 	WIKICLOSE Token = 6
 	TEXT      Token = 7
 	WS        Token = 8
+	NL Token = 9
 )
 
 type Scanner struct {
@@ -66,6 +67,11 @@ func (s *Scanner) Scan() (Token, string) {
 		return s.scanWhiteSpace()
 	}
 
+	if isNewLine(ch) {
+		s.unread()
+		return s.scanNewLine()
+	}
+
 	switch ch {
 	case '#':
 		s.unread()
@@ -93,6 +99,10 @@ func (s *Scanner) unread() {
 	}
 }
 
+func isNewLine(ch rune) bool {
+	return ch == '\n'
+}
+
 func isPunc(ch rune) bool {
 	return ch == '.' || ch == ',' || ch == '-' || ch == '_'
 }
@@ -110,7 +120,25 @@ func isText(ch rune) bool {
 }
 
 func isWhiteSpace(ch rune) bool {
-	return ch == ' '
+	return ch == ' ' || ch == '\t'
+}
+
+func (s *Scanner) scanNewLine() (Token, string) {
+	var buf bytes.Buffer
+	buf.WriteRune(s.read())
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isNewLine(ch) {
+			s.unread()
+			break
+		} else {
+			_, _ = buf.WriteRune(ch)
+		}
+	}
+
+	return NL, buf.String()
 }
 
 func (s *Scanner) scanHash() (Token, string) {
