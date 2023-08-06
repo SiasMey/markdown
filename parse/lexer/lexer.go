@@ -21,6 +21,7 @@ const (
 	TEXT      Token = 7
 	WS        Token = 8
 	NL        Token = 9
+	TICK      Token = 10
 )
 
 type Scanner struct {
@@ -78,6 +79,8 @@ func (s *Scanner) Scan() (Token, string) {
 		return s.scanHash()
 	case eof:
 		return EOF, string(ch)
+	case '`':
+		return TICK, string(ch)
 	}
 
 	return ILLEGAL, string(ch)

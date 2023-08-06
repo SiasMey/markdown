@@ -16,6 +16,7 @@ func TestScanShouldReturnToken(t *testing.T) {
 		"LeftBrc":        {"[", LEFTBRC},
 		"RightBrc":       {"]", RIGHTBRC},
 		"WikiClose":      {"]]", WIKICLOSE},
+		"Tick":      {"`", TICK},
 		"Text":           {"abc", TEXT},
 		"TextSlug":       {"-b-c", TEXT},
 		"TextUnderscore": {"_b_c", TEXT},
