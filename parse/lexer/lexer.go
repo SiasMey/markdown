@@ -43,7 +43,9 @@ func (s *Scanner) Scan() (Token, string) {
 		if next == '[' {
 			return WIKIOPEN, "[["
 		} else {
-			s.unread()
+			if ch != eof {
+				s.unread()
+			}
 			return LEFTBRC, "["
 		}
 	}
@@ -53,7 +55,9 @@ func (s *Scanner) Scan() (Token, string) {
 		if next == ']' {
 			return WIKICLOSE, "]]"
 		} else {
-			s.unread()
+			if ch != eof {
+				s.unread()
+			}
 			return RIGHTBRC, string(ch)
 		}
 	}
