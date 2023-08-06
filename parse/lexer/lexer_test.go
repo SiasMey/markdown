@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-
 func TestScanShouldReturnEof(t *testing.T) {
 	input := ""
 	expect := EOF
@@ -14,7 +13,7 @@ func TestScanShouldReturnEof(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -26,7 +25,7 @@ func TestScanShouldReturnHash(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -38,7 +37,7 @@ func TestScanShouldReturnLitHash(t *testing.T) {
 	_, lit := lex.Scan()
 
 	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s` , input, expect, lit)
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
 
@@ -50,7 +49,7 @@ func TestScanShouldReturnWikiOpen(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -62,7 +61,7 @@ func TestScanShouldReturnWikiClose(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -74,7 +73,7 @@ func TestScanShouldReturnLeftBrc(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -86,7 +85,7 @@ func TestScanShouldReturnRightBrc(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -98,7 +97,7 @@ func TestScanShouldReturnText(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -110,7 +109,7 @@ func TestScanShouldReturnTextLit(t *testing.T) {
 	_, lit := lex.Scan()
 
 	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s` , input, expect, lit)
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
 
@@ -122,7 +121,7 @@ func TestScanShouldReturnTextWithNumbers(t *testing.T) {
 	tok, _ := lex.Scan()
 
 	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
 
@@ -134,6 +133,6 @@ func TestScanShouldReturnTextWithNumbersLit(t *testing.T) {
 	_, lit := lex.Scan()
 
 	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s` , input, expect, lit)
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }

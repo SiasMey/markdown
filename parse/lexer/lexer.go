@@ -13,12 +13,12 @@ const (
 	ILLEGAL Token = -1
 	EOF     Token = 0
 
-	HASH       Token = 2
-	WIKIOPEN   Token = 3
-	LEFTBRC    Token = 4
-	RIGHTBRC   Token = 5
-	WIKICLOSE  Token = 6
-	TEXT Token = 7
+	HASH      Token = 2
+	WIKIOPEN  Token = 3
+	LEFTBRC   Token = 4
+	RIGHTBRC  Token = 5
+	WIKICLOSE Token = 6
+	TEXT      Token = 7
 )
 
 type Scanner struct {
@@ -101,7 +101,7 @@ func (s *Scanner) scanAlphaGroup() (Token, string) {
 			s.unread()
 			break
 		} else {
-			_,_ = buf.WriteRune(ch)
+			_, _ = buf.WriteRune(ch)
 		}
 	}
 
