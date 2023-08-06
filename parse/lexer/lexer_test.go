@@ -282,7 +282,7 @@ func TestScanShouldReturnNLforCR(t *testing.T) {
 }
 
 func TestScanShouldReturnNLforCRLFlit(t *testing.T) {
-	input := string('\r')+string('\n')
+	input := string('\r') + string('\n')
 	expect := input
 
 	lex := NewScanner(strings.NewReader(input))
@@ -294,7 +294,7 @@ func TestScanShouldReturnNLforCRLFlit(t *testing.T) {
 }
 
 func TestScanShouldReturnNLforCRLF(t *testing.T) {
-	input := string('\r')+string('\n')
+	input := string('\r') + string('\n')
 	expect := NL
 
 	lex := NewScanner(strings.NewReader(input))
@@ -306,8 +306,8 @@ func TestScanShouldReturnNLforCRLF(t *testing.T) {
 }
 
 func TestScanShouldReturnSingleNLLit(t *testing.T) {
-	input := string('\n')+string('\n')
-	expect := string('\n') 
+	input := string('\n') + string('\n')
+	expect := string('\n')
 
 	lex := NewScanner(strings.NewReader(input))
 	_, lit := lex.Scan()
