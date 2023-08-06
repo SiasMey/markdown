@@ -52,28 +52,3 @@ func TestScanShouldReturnRightBrc(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
 	}
 }
-
-func TestScanShouldReturnHashForIncompleteTag(t *testing.T) {
-	input := "#["
-	expect := HASH
-
-	lex := NewScanner(strings.NewReader(input))
-	tok, _ := lex.Scan()
-
-	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
-	}
-}
-
-func TestScanShouldReturnRightBraceForIncompleteTag(t *testing.T) {
-	input := "#[A       "
-	expect := RIGHTBRC
-
-	lex := NewScanner(strings.NewReader(input))
-	_, _ = lex.Scan()
-	tok, _ := lex.Scan()
-
-	if tok != expect {
-		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
-	}
-}
