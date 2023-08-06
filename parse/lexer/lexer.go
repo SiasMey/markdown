@@ -3,24 +3,26 @@ package lexer
 import (
 	"bufio"
 	"io"
+	"log"
 )
 
 type Token int
+
 const (
 	ILLEGAL Token = -1
-	EOF Token = 0
+	EOF     Token = 0
 
-	HASH Token = 2
+	HASH     Token = 2
 	WIKIOPEN Token = 3
-	TAGOPEN Token = 4
-	RIGHTBRC Token = 5
+	RIGHTBRC Token = 4
 )
 
 type Scanner struct {
 	r *bufio.Reader
 }
 
-var eof = rune(0);
+var eof = rune(0)
+var logger = log.Default()
 
 func NewScanner(r io.Reader) *Scanner {
 	return &Scanner{r: bufio.NewReader(r)}
@@ -29,17 +31,25 @@ func NewScanner(r io.Reader) *Scanner {
 func (s *Scanner) read() rune {
 	ch, _, err := s.r.ReadRune()
 	if err != nil {
-		return eof;
+		return eof
 	}
 	return ch
 }
 
-func (s *Scanner) unread() { _ = s.r.UnreadRune() }
+func (s *Scanner) unread() {
+	err := s.r.UnreadRune()
+	if err != nil {
+		logger.Print("Error during unread rune", err)
+	}
+}
 
 func (s *Scanner) Scan() (tok Token, lit string) {
+	logger.Print("Doing scan")
 	ch := s.read()
+	logger.Printf("read got '%c'", ch)
 
 	if ch == '[' {
+		logger.Print("Entered single [")
 		next := s.read()
 		if next == '[' {
 			return WIKIOPEN, "[["
@@ -49,19 +59,9 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		}
 	}
 
-	if ch == '#' {
-		next := s.read()
-		if next == '[' {
-			next2 := s.read()
-			if next2 == '[' {
-				return TAGOPEN, "#[["
-			}
-		}
-	}
-
 	switch ch {
-		case '#':
-			return HASH, string(ch)
+	case '#':
+		return HASH, string(ch)
 	}
 
 	return ILLEGAL, string(ch)
