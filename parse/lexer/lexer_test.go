@@ -281,18 +281,6 @@ func TestScanShouldReturnNLforCR(t *testing.T) {
 	}
 }
 
-func TestScanShouldReturnNLforCRLFlit(t *testing.T) {
-	input := string('\r') + string('\n')
-	expect := input
-
-	lex := NewScanner(strings.NewReader(input))
-	_, lit := lex.Scan()
-
-	if lit != expect {
-		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
-	}
-}
-
 func TestScanShouldReturnNLforCRLF(t *testing.T) {
 	input := string('\r') + string('\n')
 	expect := NL
@@ -305,9 +293,33 @@ func TestScanShouldReturnNLforCRLF(t *testing.T) {
 	}
 }
 
-func TestScanShouldReturnSingleNLLit(t *testing.T) {
+func TestScanShouldReturnSingleNLLitLinux(t *testing.T) {
 	input := string('\n') + string('\n')
 	expect := string('\n')
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
+	}
+}
+
+func TestScanShouldReturnSingleNLLitMac(t *testing.T) {
+	input := string('\r') + string('\r')
+	expect := string('\r')
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
+	}
+}
+
+func TestScanShouldReturnSingleNLLitWin(t *testing.T) {
+	input := string('\r') + string('\n')
+	expect := input
 
 	lex := NewScanner(strings.NewReader(input))
 	_, lit := lex.Scan()
