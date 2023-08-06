@@ -12,9 +12,11 @@ const (
 	ILLEGAL Token = -1
 	EOF     Token = 0
 
-	HASH     Token = 2
-	WIKIOPEN Token = 3
-	RIGHTBRC Token = 4
+	HASH      Token = 2
+	WIKIOPEN  Token = 3
+	LEFTBRC   Token = 4
+	RIGHTBRC  Token = 5
+	WIKICLOSE Token = 6
 )
 
 type Scanner struct {
@@ -44,18 +46,25 @@ func (s *Scanner) unread() {
 }
 
 func (s *Scanner) Scan() (tok Token, lit string) {
-	logger.Print("Doing scan")
 	ch := s.read()
-	logger.Printf("read got '%c'", ch)
 
 	if ch == '[' {
-		logger.Print("Entered single [")
 		next := s.read()
 		if next == '[' {
 			return WIKIOPEN, "[["
 		} else {
 			s.unread()
-			return RIGHTBRC, "["
+			return LEFTBRC, "["
+		}
+	}
+
+	if ch == ']' {
+		next := s.read()
+		if next == ']' {
+			return WIKICLOSE, "]]"
+		} else {
+			s.unread()
+			return RIGHTBRC, string(ch)
 		}
 	}
 

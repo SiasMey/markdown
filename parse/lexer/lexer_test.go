@@ -41,8 +41,32 @@ func TestScanShouldReturnWikiOpen(t *testing.T) {
 	}
 }
 
-func TestScanShouldReturnRightBrc(t *testing.T) {
+func TestScanShouldReturnWikiClose(t *testing.T) {
+	input := "]]"
+	expect := WIKICLOSE
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnLeftBrc(t *testing.T) {
 	input := "["
+	expect := LEFTBRC
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d` , input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnRightBrc(t *testing.T) {
+	input := "]"
 	expect := RIGHTBRC
 
 	lex := NewScanner(strings.NewReader(input))
