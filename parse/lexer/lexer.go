@@ -87,7 +87,7 @@ func (s *Scanner) unread() {
 }
 
 func isAlphaNum(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9') || ch == '.' || ch == ','
 }
 
 func (s *Scanner) scanAlphaGroup() (Token, string) {

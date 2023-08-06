@@ -136,3 +136,51 @@ func TestScanShouldReturnTextWithNumbersLit(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
+
+func TestScanShouldReturnTextWithFullstop(t *testing.T) {
+	input := "Alpha.Fullstop"
+	expect := TEXT
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnTextWithFullstopLit(t *testing.T) {
+	input := "Alpha.Fullstop"
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
+	}
+}
+
+func TestScanShouldReturnTextWithComma(t *testing.T) {
+	input := "Alpha,Comma"
+	expect := TEXT
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnTextWithCommaLit(t *testing.T) {
+	input := "Alpha,Comma"
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
+	}
+}
