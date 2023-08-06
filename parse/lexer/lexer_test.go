@@ -304,3 +304,15 @@ func TestScanShouldReturnNLforCRLF(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
 	}
 }
+
+func TestScanShouldReturnSingleNLLit(t *testing.T) {
+	input := string('\n')+string('\n')
+	expect := string('\n') 
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected "%s" got "%s"`, input, expect, lit)
+	}
+}
