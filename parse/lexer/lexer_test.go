@@ -209,7 +209,6 @@ func TestScanShouldReturnTextWithCommaLit(t *testing.T) {
 	}
 }
 
-
 func TestScanShouldReturnWS(t *testing.T) {
 	input := " "
 	expect := WS
@@ -219,5 +218,17 @@ func TestScanShouldReturnWS(t *testing.T) {
 
 	if tok != expect {
 		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}
+
+func TestScanShouldReturnContiguosWSLit(t *testing.T) {
+	input := "      "
+	expect := input
+
+	lex := NewScanner(strings.NewReader(input))
+	_, lit := lex.Scan()
+
+	if lit != expect {
+		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
