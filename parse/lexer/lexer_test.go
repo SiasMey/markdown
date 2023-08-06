@@ -208,3 +208,16 @@ func TestScanShouldReturnTextWithCommaLit(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected %s got %s`, input, expect, lit)
 	}
 }
+
+
+func TestScanShouldReturnWS(t *testing.T) {
+	input := " "
+	expect := WS
+
+	lex := NewScanner(strings.NewReader(input))
+	tok, _ := lex.Scan()
+
+	if tok != expect {
+		t.Fatalf(`Scan failed "%s" expected %d got %d`, input, expect, tok)
+	}
+}

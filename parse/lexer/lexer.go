@@ -19,6 +19,7 @@ const (
 	RIGHTBRC  Token = 5
 	WIKICLOSE Token = 6
 	TEXT      Token = 7
+	WS        Token = 8
 )
 
 type Scanner struct {
@@ -58,6 +59,11 @@ func (s *Scanner) Scan() (Token, string) {
 	if isText(ch) {
 		s.unread()
 		return s.scanText()
+	}
+	
+	if isWhiteSpace(ch) {
+		s.unread()
+		return s.scanWhiteSpace()
 	}
 
 	switch ch {
@@ -100,6 +106,28 @@ func isAlpha(ch rune) bool {
 
 func isText(ch rune) bool {
 	return isAlpha(ch) || isNum(ch) || isPunc(ch)
+}
+
+func isWhiteSpace(ch rune) bool {
+	return ch == ' '
+}
+
+func (s *Scanner) scanWhiteSpace() (Token, string) {
+	var buf bytes.Buffer
+	buf.WriteRune(s.read())
+
+	for {
+		if ch := s.read(); ch == eof {
+			break
+		} else if !isWhiteSpace(ch) {
+			s.unread()
+			break
+		} else {
+			_, _ = buf.WriteRune(ch)
+		}
+	}
+
+	return WS, buf.String()
 }
 
 func (s *Scanner) scanText() (Token, string) {
