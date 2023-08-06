@@ -94,8 +94,12 @@ func isNum(ch rune) bool {
 	return ch >= '0' && ch <= '9'
 }
 
+func isAlpha(ch rune) bool {
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+}
+
 func isAlphaNum(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || isNum(ch) || isPunc(ch)
+	return isAlpha(ch) || isNum(ch) || isPunc(ch)
 }
 
 func (s *Scanner) scanAlphaGroup() (Token, string) {
