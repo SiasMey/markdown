@@ -57,7 +57,7 @@ func (s *Scanner) Scan() (Token, string) {
 
 	if isText(ch) {
 		s.unread()
-		return s.scanAlphaGroup()
+		return s.scanText()
 	}
 
 	switch ch {
@@ -102,7 +102,7 @@ func isText(ch rune) bool {
 	return isAlpha(ch) || isNum(ch) || isPunc(ch)
 }
 
-func (s *Scanner) scanAlphaGroup() (Token, string) {
+func (s *Scanner) scanText() (Token, string) {
 	var buf bytes.Buffer
 	buf.WriteRune(s.read())
 
