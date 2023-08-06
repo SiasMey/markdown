@@ -87,7 +87,7 @@ func (s *Scanner) unread() {
 }
 
 func isPunc(ch rune) bool {
-	return ch == '.' || ch == ',' || ch == '-'
+	return ch == '.' || ch == ',' || ch == '-' || ch == '_'
 }
 
 func isNum(ch rune) bool {
