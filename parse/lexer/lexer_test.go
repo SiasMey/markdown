@@ -8,7 +8,7 @@ import (
 func TestScanShouldReturnToken(t *testing.T) {
 	tests := map[string]struct {
 		input string
-		want  Token
+		want  TokenType
 	}{
 		"Eof":            {"", EOF},
 		"Hash":           {"#", HASH},
@@ -31,9 +31,9 @@ func TestScanShouldReturnToken(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			lex := NewScanner(strings.NewReader(tc.input))
-			got, _ := lex.Scan()
-			if got != tc.want {
-				t.Fatalf(`Scan failed "%s" expected %d got %d`, tc.input, tc.want, got)
+			got := lex.Scan()
+			if got.TypeType != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %d got %d`, tc.input, tc.want, got.TypeType)
 			}
 		})
 	}
@@ -60,9 +60,9 @@ func TestScanShouldReturnLiteral(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			lex := NewScanner(strings.NewReader(tc.input))
-			_, got := lex.Scan()
-			if got != tc.want {
-				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			got := lex.Scan()
+			if got.Lit != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got.Lit)
 			}
 		})
 	}
@@ -89,9 +89,9 @@ func TestScanTextLiteralShouldNotOverrun(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			lex := NewScanner(strings.NewReader(tc.input))
-			_, got := lex.Scan()
-			if got != tc.want {
-				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			got := lex.Scan()
+			if got.Lit != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got.Lit)
 			}
 		})
 	}
@@ -119,9 +119,9 @@ func TestScanWhiteSpaceShouldNotOverrun(t *testing.T) {
 	for name, tc := range tests {
 		t.Run(name, func(t *testing.T) {
 			lex := NewScanner(strings.NewReader(tc.input))
-			_, got := lex.Scan()
-			if got != tc.want {
-				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got)
+			got := lex.Scan()
+			if got.Lit != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %v got %v`, tc.input, tc.want, got.Lit)
 			}
 		})
 	}

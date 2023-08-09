@@ -7,22 +7,29 @@ import (
 	"log"
 )
 
-type Token int
+type TokenType int
 
 const (
-	ILLEGAL Token = -1
-	EOF     Token = 0
+	ILLEGAL TokenType = -1
+	EOF     TokenType = 0
 
-	HASH     Token = 2
-	LEFTBRK  Token = 4
-	RIGHTBRK Token = 5
-	LEFTPRN  Token = 6
-	RIGHTPRN Token = 11
-	TEXT     Token = 7
-	WS       Token = 8
-	NL       Token = 9
-	TICK     Token = 10
+	HASH     TokenType = 2
+	LEFTBRK  TokenType = 4
+	RIGHTBRK TokenType = 5
+	LEFTPRN  TokenType = 6
+	RIGHTPRN TokenType = 11
+	TEXT     TokenType = 7
+	WS       TokenType = 8
+	NL       TokenType = 9
+	TICK     TokenType = 10
 )
+
+type Token struct {
+	TypeType TokenType
+	Lit string
+	LineNr int
+	Length int
+}
 
 type Scanner struct {
 	r *bufio.Reader
@@ -35,7 +42,18 @@ func NewScanner(r io.Reader) *Scanner {
 	return &Scanner{r: bufio.NewReader(r)}
 }
 
-func (s *Scanner) Scan() (Token, string) {
+func (s *Scanner) Scan() Token {
+	token, lit := s.scanNext()
+
+	return Token{
+		TypeType: token,
+		Lit: lit,
+		LineNr: 0,
+		Length: 0,
+	}
+}
+
+func (s *Scanner) scanNext() (TokenType, string) {
 	ch := s.read()
 
 	if isText(ch) {
@@ -72,7 +90,6 @@ func (s *Scanner) Scan() (Token, string) {
 	}
 
 	return ILLEGAL, string(ch)
-
 }
 
 func (s *Scanner) read() rune {
@@ -114,7 +131,7 @@ func isWhiteSpace(ch rune) bool {
 	return ch == ' ' || ch == '\t'
 }
 
-func (s *Scanner) scanNewLine() (Token, string) {
+func (s *Scanner) scanNewLine() (TokenType, string) {
 	nl := s.read()
 
 	if nl == '\r' {
@@ -130,7 +147,7 @@ func (s *Scanner) scanNewLine() (Token, string) {
 	return NL, string(nl)
 }
 
-func (s *Scanner) scanHash() (Token, string) {
+func (s *Scanner) scanHash() (TokenType, string) {
 	var buf bytes.Buffer
 	buf.WriteRune(s.read())
 
@@ -148,7 +165,7 @@ func (s *Scanner) scanHash() (Token, string) {
 	return HASH, buf.String()
 }
 
-func (s *Scanner) scanWhiteSpace() (Token, string) {
+func (s *Scanner) scanWhiteSpace() (TokenType, string) {
 	var buf bytes.Buffer
 	buf.WriteRune(s.read())
 
@@ -166,7 +183,7 @@ func (s *Scanner) scanWhiteSpace() (Token, string) {
 	return WS, buf.String()
 }
 
-func (s *Scanner) scanText() (Token, string) {
+func (s *Scanner) scanText() (TokenType, string) {
 	var buf bytes.Buffer
 	buf.WriteRune(s.read())
 
