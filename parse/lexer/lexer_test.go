@@ -180,3 +180,15 @@ func TestScanReturnsTokenColumn(t *testing.T) {
 		t.Fatalf(`Scan failed "%s" expected column nr %v got %v`, input, want, got.Column)
 	}
 }
+
+func TestScanReturnsTokenColumnResetAfterNewline(t *testing.T) {
+	input := `asd
+ast asg`
+	want := 1
+	lex := NewScanner(strings.NewReader(input))
+	_ = lex.Scan()
+	got := lex.Scan()
+	if got.Column != want {
+		t.Fatalf(`Scan failed "%s" expected column nr %v got %v`, input, want, got.Column)
+	}
+}

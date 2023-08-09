@@ -152,6 +152,7 @@ func (s *Scanner) scanNewLine() (TokenType, string) {
 	}
 
 	s.LineNr++
+	s.Column = 1
 	return NL, string(nl)
 }
 
