@@ -126,3 +126,46 @@ func TestScanWhiteSpaceShouldNotOverrun(t *testing.T) {
 		})
 	}
 }
+
+func TestScanShouldReturnLength(t *testing.T) {
+	tests := map[string]struct {
+		input string
+		want  int
+	}{
+		"1":              {"#", 1},
+		"3":              {"###", 3},
+		"Text":           {"abc", 3},
+		"TextSlug":       {"a-b-c", 5},
+		"TextUnderscore": {"a_b_c", 5},
+		"TextNumbers":    {"925abc", 6},
+		"WSContiguous":   {"   ", 3},
+		"WSWithTab":      {"  	", 3},
+		"NLLinuxSingle":  {string('\n') + string('\n'), 1},
+		"NLMacSingle":    {string('\r') + string('\r'), 1},
+		"NLDosSingle":    {string('\r') + string('\n') + "more", 2},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			lex := NewScanner(strings.NewReader(tc.input))
+			got := lex.Scan()
+			if got.Length != tc.want {
+				t.Fatalf(`Scan failed "%s" expected length of %v got %v`, tc.input, tc.want, got.Length)
+			}
+		})
+	}
+}
+
+func TestScanReturnsTokenLineNr(t *testing.T) {
+	input := `asd
+ast
+asg`
+	want := 1
+	lex := NewScanner(strings.NewReader(input))
+	_ = lex.Scan()
+	got := lex.Scan()
+	if got.LineNr != want {
+		t.Fatalf(`Scan failed "%s" expected line nr %v got %v`, input, want, got.LineNr)
+	}
+
+}
