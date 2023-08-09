@@ -29,29 +29,35 @@ type Token struct {
 	Lit      string
 	LineNr   int
 	Length   int
+	Column   int
 }
 
 type Scanner struct {
 	r      *bufio.Reader
 	LineNr int
+	Column int
 }
 
 var eof = rune(0)
 var logger = log.Default()
 
 func NewScanner(r io.Reader) *Scanner {
-	return &Scanner{r: bufio.NewReader(r), LineNr: 0}
+	return &Scanner{r: bufio.NewReader(r), LineNr: 0, Column: 1}
 }
 
 func (s *Scanner) Scan() Token {
 	token, lit := s.scanNext()
 
-	return Token{
+	result := Token{
 		TypeType: token,
 		Lit:      lit,
 		LineNr:   s.LineNr,
 		Length:   len(lit),
+		Column:   s.Column,
 	}
+
+	s.Column += len(lit)
+	return result
 }
 
 func (s *Scanner) scanNext() (TokenType, string) {

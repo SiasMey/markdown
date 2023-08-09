@@ -169,3 +169,14 @@ asg`
 	}
 
 }
+
+func TestScanReturnsTokenColumn(t *testing.T) {
+	input := `asd ast asg`
+	want := 4
+	lex := NewScanner(strings.NewReader(input))
+	_ = lex.Scan()
+	got := lex.Scan()
+	if got.Column != want {
+		t.Fatalf(`Scan failed "%s" expected column nr %v got %v`, input, want, got.Column)
+	}
+}
