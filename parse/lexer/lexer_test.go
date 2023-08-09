@@ -32,8 +32,8 @@ func TestScanShouldReturnToken(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			lex := NewScanner(strings.NewReader(tc.input))
 			got := lex.Scan()
-			if got.TypeType != tc.want {
-				t.Fatalf(`Scan failed "%s" expected %d got %d`, tc.input, tc.want, got.TypeType)
+			if got.TokenType != tc.want {
+				t.Fatalf(`Scan failed "%s" expected %d got %d`, tc.input, tc.want, got.TokenType)
 			}
 		})
 	}

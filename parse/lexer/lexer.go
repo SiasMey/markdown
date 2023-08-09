@@ -25,7 +25,7 @@ const (
 )
 
 type Token struct {
-	TypeType TokenType
+	TokenType TokenType
 	Lit      string
 	LineNr   int
 	Length   int
@@ -49,7 +49,7 @@ func (s *Scanner) Scan() Token {
 	token, lit := s.scanNext()
 
 	result := Token{
-		TypeType: token,
+		TokenType: token,
 		Lit:      lit,
 		LineNr:   s.LineNr,
 		Length:   len(lit),
