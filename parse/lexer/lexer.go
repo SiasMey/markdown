@@ -13,15 +13,15 @@ const (
 	ILLEGAL Token = -1
 	EOF     Token = 0
 
-	HASH      Token = 2
-	WIKIOPEN  Token = 3
-	LEFTBRC   Token = 4
-	RIGHTBRC  Token = 5
-	WIKICLOSE Token = 6
-	TEXT      Token = 7
-	WS        Token = 8
-	NL        Token = 9
-	TICK      Token = 10
+	HASH     Token = 2
+	LEFTBRK  Token = 4
+	RIGHTBRK Token = 5
+	LEFTPRN  Token = 6
+	RIGHTPRN Token = 11
+	TEXT     Token = 7
+	WS       Token = 8
+	NL       Token = 9
+	TICK     Token = 10
 )
 
 type Scanner struct {
@@ -37,30 +37,6 @@ func NewScanner(r io.Reader) *Scanner {
 
 func (s *Scanner) Scan() (Token, string) {
 	ch := s.read()
-
-	if ch == '[' {
-		next := s.read()
-		if next == '[' {
-			return WIKIOPEN, "[["
-		} else {
-			if ch != eof {
-				s.unread()
-			}
-			return LEFTBRC, "["
-		}
-	}
-
-	if ch == ']' {
-		next := s.read()
-		if next == ']' {
-			return WIKICLOSE, "]]"
-		} else {
-			if ch != eof {
-				s.unread()
-			}
-			return RIGHTBRC, string(ch)
-		}
-	}
 
 	if isText(ch) {
 		s.unread()
@@ -85,6 +61,14 @@ func (s *Scanner) Scan() (Token, string) {
 		return EOF, string(ch)
 	case '`':
 		return TICK, string(ch)
+	case '[':
+		return LEFTBRK, string(ch)
+	case ']':
+		return RIGHTBRK, string(ch)
+	case '(':
+		return LEFTPRN, string(ch)
+	case ')':
+		return RIGHTPRN, string(ch)
 	}
 
 	return ILLEGAL, string(ch)

@@ -12,10 +12,10 @@ func TestScanShouldReturnToken(t *testing.T) {
 	}{
 		"Eof":            {"", EOF},
 		"Hash":           {"#", HASH},
-		"WikiOpen":       {"[[", WIKIOPEN},
-		"LeftBrc":        {"[", LEFTBRC},
-		"RightBrc":       {"]", RIGHTBRC},
-		"WikiClose":      {"]]", WIKICLOSE},
+		"LeftBrc":        {"[", LEFTBRK},
+		"RightBrc":       {"]", RIGHTBRK},
+		"LeftParen":      {"(", LEFTPRN},
+		"RightParen":     {")", RIGHTPRN},
 		"Tick":           {"`", TICK},
 		"Text":           {"abc", TEXT},
 		"TextSlug":       {"-b-c", TEXT},
@@ -75,8 +75,8 @@ func TestScanTextLiteralShouldNotOverrun(t *testing.T) {
 	}{
 		"LeftBrc":       {"ast[", "ast"},
 		"RightBrc":      {"ast]", "ast"},
-		"WikiOpen":      {"ast[[", "ast"},
-		"WikiClose":     {"ast]]", "ast"},
+		"LeftPrn":       {"ast(", "ast"},
+		"RightPrn":      {"ast)", "ast"},
 		"Hash":          {"ast#", "ast"},
 		"TICK":          {"ast`", "ast"},
 		"WhiteSpace":    {"ast ", "ast"},
@@ -102,18 +102,18 @@ func TestScanWhiteSpaceShouldNotOverrun(t *testing.T) {
 		input string
 		want  string
 	}{
-		"SpaceLeftBrc":   {" [", " "},
-		"SpaceRightBrc":  {" ]", " "},
-		"SpaceWikiOpen":  {" [[", " "},
-		"SpaceWikiClose": {" ]]", " "},
-		"SpaceHash":      {" #", " "},
-		"SpaceTICK":      {" `", " "},
-		"TabLeftBrc":     {"	[", "	"},
-		"TabRightBrc":    {"	]", "	"},
-		"TabWikiOpen":    {"	[[", "	"},
-		"TabWikiClose":   {"	]]", "	"},
-		"TabHash":        {"	#", "	"},
-		"TabTICK":        {"	`", "	"},
+		"SpaceLeftBrc":  {" [", " "},
+		"SpaceRightBrc": {" ]", " "},
+		"SpaceLeftPrn":  {" (", " "},
+		"SpaceRightPrn": {" )", " "},
+		"SpaceHash":     {" #", " "},
+		"SpaceTICK":     {" `", " "},
+		"TabLeftBrc":    {"	[", "	"},
+		"TabRightBrc":   {"	]", "	"},
+		"TabLeftPrn":    {"	(", "	"},
+		"TabRightPrn":   {"	)", "	"},
+		"TabHash":       {"	#", "	"},
+		"TabTICK":       {"	`", "	"},
 	}
 
 	for name, tc := range tests {
