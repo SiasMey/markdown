@@ -30,7 +30,7 @@ type Parser struct {
 	s *lexer.Scanner
 }
 
-func (p *Parser) parseHeader(start lexer.Token) (Symbol, error) {
+func (p *Parser) parseHashStart(start lexer.Token) (Symbol, error) {
 	charStart := start.Column
 	charEnd := start.Column + start.Length
 	lineNr := start.LineNr
@@ -75,7 +75,7 @@ func (p *Parser) nextSymbol() (Symbol, error) {
 
 	switch tk.TokenType {
 	case lexer.HASH:
-		return p.parseHeader(tk)
+		return p.parseHashStart(tk)
 	}
 
 	return Symbol{}, errors.New("Nothing left to parse")
