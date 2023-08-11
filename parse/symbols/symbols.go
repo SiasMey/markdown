@@ -8,6 +8,7 @@ import (
 )
 
 type Symbol struct {
+	Lit       string
 	Value     string
 	CharStart int
 	CharEnd   int
@@ -27,19 +28,32 @@ func (p *Parser) parseHeader(start lexer.Token) (Symbol, error) {
 	charEnd := start.Column + start.Length
 	lineNr := start.LineNr
 	lit := start.Lit
+	val := ""
+	gotTrailingWs := false
 
 	for {
 		if tk := p.s.Scan(); tk.TokenType == lexer.EOF {
 			break
 		} else if tk.TokenType == lexer.NL {
 			break
+		} else if tk.TokenType == lexer.WS {
+			if gotTrailingWs {
+				lit += tk.Lit
+				val += tk.Lit
+				charEnd += tk.Length
+			} else {
+				gotTrailingWs = true
+				lit += tk.Lit
+				charEnd += tk.Length
+			}
 		} else {
 			lit += tk.Lit
+			val += tk.Lit
 			charEnd += tk.Length
 		}
 	}
 
-	return Symbol{Value: lit, LineNo: lineNr, CharStart: charStart, CharEnd: charEnd}, nil
+	return Symbol{Lit: lit, Value: val, LineNo: lineNr, CharStart: charStart, CharEnd: charEnd}, nil
 }
 
 func (p *Parser) nextSymbol() (Symbol, error) {

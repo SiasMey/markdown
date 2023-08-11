@@ -7,7 +7,7 @@ import (
 
 func TestSymbolsShouldReturnTitle(t *testing.T) {
 	input := "# Title"
-	expected := "# Title"
+	expected := "Title"
 
 	res, err := Parse(input)
 	if res.Title.Value != expected {
