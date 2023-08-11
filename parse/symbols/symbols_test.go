@@ -15,6 +15,16 @@ func TestSymbolsShouldReturnTitle(t *testing.T) {
 	}
 }
 
+func TestSymbolsShouldReturnTitleType(t *testing.T) {
+	input := "# Title"
+	expected := HEADING1
+
+	res, err := Parse(input)
+	if res.Title.Type != expected {
+		failMessageType(t, input, res.Title.Type, err, expected)
+	}
+}
+
 func TestSymbolsShouldReturnTitleCharStart(t *testing.T) {
 	input := "# Another Title"
 	expected := 1
@@ -105,6 +115,10 @@ func itemExists(slice interface{}, item interface{}) bool {
 }
 
 func failMessageString(t *testing.T, input string, result string, err error, expected string) {
+	t.Fatalf(`Parse("%s") = %q, %v, expected %s`, input, result, err, expected)
+}
+
+func failMessageType(t *testing.T, input string, result SymbolType, err error, expected SymbolType) {
 	t.Fatalf(`Parse("%s") = %q, %v, expected %s`, input, result, err, expected)
 }
 

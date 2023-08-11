@@ -13,7 +13,14 @@ type Symbol struct {
 	CharStart int
 	CharEnd   int
 	LineNo    int
+	Type      SymbolType
 }
+
+type SymbolType string
+
+const (
+	HEADING1 SymbolType = "Heading1"
+)
 
 type Symbols struct {
 	Title Symbol
@@ -53,7 +60,14 @@ func (p *Parser) parseHeader(start lexer.Token) (Symbol, error) {
 		}
 	}
 
-	return Symbol{Lit: lit, Value: val, LineNo: lineNr, CharStart: charStart, CharEnd: charEnd}, nil
+	return Symbol{
+		Type:      HEADING1,
+		Lit:       lit,
+		Value:     val,
+		LineNo:    lineNr,
+		CharStart: charStart,
+		CharEnd:   charEnd,
+	}, nil
 }
 
 func (p *Parser) nextSymbol() (Symbol, error) {
