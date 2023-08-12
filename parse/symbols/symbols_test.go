@@ -288,6 +288,21 @@ func TestParseShouldReturnCombinationsWikilink(t *testing.T) {
 	}
 }
 
+func TestParseShouldReturnCombinationsTag(t *testing.T) {
+	input := `# test header
+[Http link](http://test.com) [[arst1234]]
+	#[[test-tag]]
+`
+	expected := "test-tag"
+
+	res, err := Parse(input)
+	check := res.Tags[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
+
 func itemExists(slice interface{}, item interface{}) bool {
 	s := reflect.ValueOf(slice)
 
