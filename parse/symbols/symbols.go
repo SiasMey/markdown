@@ -22,12 +22,14 @@ const (
 	HEADING1 SymbolType = "Heading1"
 	WIKILINK SymbolType = "WikiLink"
 	LINK     SymbolType = "Link"
+	TAG      SymbolType = "Tag"
 )
 
 type Symbols struct {
 	Title     Symbol
 	WikiLinks []Symbol
 	Links     []Symbol
+	Tags      []Symbol
 }
 
 type Parser struct {
@@ -42,6 +44,7 @@ func Parse(input string) (Symbols, error) {
 	parser := NewParser(input)
 	wikiLinks := []Symbol{}
 	links := []Symbol{}
+	tags := []Symbol{}
 
 	var title Symbol
 
@@ -55,10 +58,17 @@ func Parse(input string) (Symbols, error) {
 			wikiLinks = append(wikiLinks, sym)
 		} else if sym.Type == LINK {
 			links = append(links, sym)
+		} else if sym.Type == TAG {
+			tags = append(tags, sym)
 		}
 	}
 
-	res := Symbols{Title: title, WikiLinks: wikiLinks, Links: links}
+	res := Symbols{
+		Title:     title,
+		WikiLinks: wikiLinks,
+		Links:     links,
+		Tags:      tags,
+	}
 	return res, nil
 }
 
@@ -141,18 +151,34 @@ func (p *Parser) parseHashStart(start lexer.Token) (Symbol, error) {
 	lineNr := start.LineNr
 	lit := start.Lit
 	val := ""
+	hashType := HEADING1
 	gotTrailingWs := false
+	scopes := 0
 
 	for {
 		if tk := p.s.Scan(); tk.TokenType == lexer.EOF {
 			break
 		} else if tk.TokenType == lexer.NL {
 			break
+		} else if start.Lit == "#" && tk.TokenType == lexer.LEFTBRK {
+			hashType = TAG
+			lit += tk.Lit
+			charEnd += tk.Length
+
+			scopes += 1
+		} else if tk.TokenType == lexer.RIGHTBRK {
+			scopes -= 1
+			lit += tk.Lit
+			charEnd += tk.Length
+
+			if hashType == TAG && scopes < 1 {
+				break
+			}
 		} else if tk.TokenType == lexer.WS {
 			if gotTrailingWs {
 				lit += tk.Lit
-				val += tk.Lit
 				charEnd += tk.Length
+				val += tk.Lit
 			} else {
 				gotTrailingWs = true
 				lit += tk.Lit
@@ -166,7 +192,7 @@ func (p *Parser) parseHashStart(start lexer.Token) (Symbol, error) {
 	}
 
 	return Symbol{
-		Type:      HEADING1,
+		Type:      hashType,
 		Lit:       lit,
 		Value:     val,
 		LineNo:    lineNr,

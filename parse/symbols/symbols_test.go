@@ -110,8 +110,8 @@ func TestSymbolsShouldReturnWikilinkLineNo(t *testing.T) {
 	expected := 0
 
 	res, err := Parse(input)
-	if res.Title.LineNo != expected {
-		failMessageInt(t, input, res.Title.LineNo, err, expected)
+	if res.WikiLinks[0].LineNo != expected {
+		failMessageInt(t, input, res.WikiLinks[0].LineNo, err, expected)
 	}
 }
 
@@ -179,6 +179,66 @@ func TestSymbolsShouldResturnLinkLineNr(t *testing.T) {
 
 	res, err := Parse(input)
 	check := res.Links[0]
+
+	if check.LineNo != expected {
+		failMessageInt(t, input, check.LineNo, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnTagLit(t *testing.T) {
+	input := "#[[test]]"
+	expected := "#[[test]]"
+
+	res, err := Parse(input)
+	check := res.Tags[0]
+
+	if check.Lit != expected {
+		failMessageString(t, input, check.Lit, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnTagValue(t *testing.T) {
+	input := "#[[test]]"
+	expected := "test"
+
+	res, err := Parse(input)
+	check := res.Tags[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
+
+func TestSymbolsShouldResturnTagStartChar(t *testing.T) {
+	input := "#[[test]]"
+	expected := 1
+
+	res, err := Parse(input)
+	check := res.Tags[0]
+
+	if check.CharStart != expected {
+		failMessageInt(t, input, check.CharStart, err, expected)
+	}
+}
+
+func TestSymbolsShouldResturnTagEndChar(t *testing.T) {
+	input := "#[[test]]"
+	expected := len(input) + 1
+
+	res, err := Parse(input)
+	check := res.Tags[0]
+
+	if check.CharEnd != expected {
+		failMessageInt(t, input, check.CharEnd, err, expected)
+	}
+}
+
+func TestSymbolsShouldResturnTagLineNr(t *testing.T) {
+	input := "#[[test]]"
+	expected := 0
+
+	res, err := Parse(input)
+	check := res.Tags[0]
 
 	if check.LineNo != expected {
 		failMessageInt(t, input, check.LineNo, err, expected)
