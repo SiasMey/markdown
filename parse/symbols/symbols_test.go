@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestSymbolsShouldReturnTitle(t *testing.T) {
+func TestParseShouldReturnTitle(t *testing.T) {
 	input := "# Title"
 	expected := "Title"
 
@@ -15,7 +15,7 @@ func TestSymbolsShouldReturnTitle(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTitleType(t *testing.T) {
+func TestParseShouldReturnTitleType(t *testing.T) {
 	input := "# Title"
 	expected := HEADING1
 
@@ -25,7 +25,7 @@ func TestSymbolsShouldReturnTitleType(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTitleCharStart(t *testing.T) {
+func TestParseShouldReturnTitleCharStart(t *testing.T) {
 	input := "# Another Title"
 	expected := 1
 
@@ -35,7 +35,7 @@ func TestSymbolsShouldReturnTitleCharStart(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTitleCharEnd(t *testing.T) {
+func TestParseShouldReturnTitleCharEnd(t *testing.T) {
 	input := "# New Title"
 	expected := len(input) + 1
 
@@ -45,7 +45,7 @@ func TestSymbolsShouldReturnTitleCharEnd(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTitleLineNo(t *testing.T) {
+func TestParseShouldReturnTitleLineNo(t *testing.T) {
 	input := "# Title"
 	expected := 0
 
@@ -55,7 +55,7 @@ func TestSymbolsShouldReturnTitleLineNo(t *testing.T) {
 	}
 }
 
-func TestSymbolShouldReturnWikilinkLit(t *testing.T) {
+func TestParseShouldReturnWikilinkLit(t *testing.T) {
 	input := "[[test]]"
 	expected := "[[test]]"
 
@@ -65,7 +65,7 @@ func TestSymbolShouldReturnWikilinkLit(t *testing.T) {
 	}
 }
 
-func TestSymbolShouldReturnWikilinkValue(t *testing.T) {
+func TestParseShouldReturnWikilinkValue(t *testing.T) {
 	input := "[[test]]"
 	expected := "test"
 
@@ -75,7 +75,7 @@ func TestSymbolShouldReturnWikilinkValue(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnWikilinkType(t *testing.T) {
+func TestParseShouldReturnWikilinkType(t *testing.T) {
 	input := "[[test]]"
 	expected := WIKILINK
 
@@ -85,7 +85,7 @@ func TestSymbolsShouldReturnWikilinkType(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnWikilinkCharStart(t *testing.T) {
+func TestParseShouldReturnWikilinkCharStart(t *testing.T) {
 	input := "[[test]]"
 	expected := 1
 
@@ -95,7 +95,7 @@ func TestSymbolsShouldReturnWikilinkCharStart(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnWikilinkCharEnd(t *testing.T) {
+func TestParseShouldReturnWikilinkCharEnd(t *testing.T) {
 	input := "[[test]]"
 	expected := len(input) + 1
 
@@ -105,7 +105,7 @@ func TestSymbolsShouldReturnWikilinkCharEnd(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnWikilinkLineNo(t *testing.T) {
+func TestParseShouldReturnWikilinkLineNo(t *testing.T) {
 	input := "[[test]]"
 	expected := 0
 
@@ -115,7 +115,7 @@ func TestSymbolsShouldReturnWikilinkLineNo(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTwoWikilinks(t *testing.T) {
+func TestParseShouldReturnTwoWikilinks(t *testing.T) {
 	input := "[[test]][[test2]]"
 	expected := 2
 
@@ -125,7 +125,7 @@ func TestSymbolsShouldReturnTwoWikilinks(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnLink(t *testing.T) {
+func TestParseShouldReturnLink(t *testing.T) {
 	input := "[test link](http://test.com)"
 	expected := LINK
 
@@ -137,7 +137,7 @@ func TestSymbolsShouldReturnLink(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnLinkValue(t *testing.T) {
+func TestParseShouldReturnLinkValue(t *testing.T) {
 	input := "[test link](http://test.com)"
 	expected := "http://test.com"
 
@@ -149,7 +149,7 @@ func TestSymbolsShouldReturnLinkValue(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnLinkStartChar(t *testing.T) {
+func TestParseShouldResturnLinkStartChar(t *testing.T) {
 	input := "[test link](http://trash.com)"
 	expected := 1
 
@@ -161,7 +161,7 @@ func TestSymbolsShouldResturnLinkStartChar(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnLinkEndChar(t *testing.T) {
+func TestParseShouldResturnLinkEndChar(t *testing.T) {
 	input := "[test link](http://trash.com)"
 	expected := len(input) + 1
 
@@ -173,7 +173,7 @@ func TestSymbolsShouldResturnLinkEndChar(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnLinkLineNr(t *testing.T) {
+func TestParseShouldResturnLinkLineNr(t *testing.T) {
 	input := "[test link](http://trash.com)"
 	expected := 0
 
@@ -185,7 +185,7 @@ func TestSymbolsShouldResturnLinkLineNr(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTagLit(t *testing.T) {
+func TestParseShouldReturnTagLit(t *testing.T) {
 	input := "#[[test]]"
 	expected := "#[[test]]"
 
@@ -197,7 +197,7 @@ func TestSymbolsShouldReturnTagLit(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldReturnTagValue(t *testing.T) {
+func TestParseShouldReturnTagValue(t *testing.T) {
 	input := "#[[test]]"
 	expected := "test"
 
@@ -209,7 +209,7 @@ func TestSymbolsShouldReturnTagValue(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnTagStartChar(t *testing.T) {
+func TestParseShouldResturnTagStartChar(t *testing.T) {
 	input := "#[[test]]"
 	expected := 1
 
@@ -221,7 +221,7 @@ func TestSymbolsShouldResturnTagStartChar(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnTagEndChar(t *testing.T) {
+func TestParseShouldResturnTagEndChar(t *testing.T) {
 	input := "#[[test]]"
 	expected := len(input) + 1
 
@@ -233,7 +233,7 @@ func TestSymbolsShouldResturnTagEndChar(t *testing.T) {
 	}
 }
 
-func TestSymbolsShouldResturnTagLineNr(t *testing.T) {
+func TestParseShouldResturnTagLineNr(t *testing.T) {
 	input := "#[[test]]"
 	expected := 0
 
