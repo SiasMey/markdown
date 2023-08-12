@@ -149,48 +149,30 @@ func TestSymbolsShouldReturnLinkValue(t *testing.T) {
 	}
 }
 
-// func TestSymbolsShouldReturnTitleIgnoringFrontmatter(t *testing.T) {
-// 	input := `---
-// 	tags:
-// 	  - tag1
-// ---
-// # Title`
-// 	expected := "Title"
-//
-// 	res, err := Parse(input)
-// 	if res.Title.Value != expected {
-// 		failMessageString(t, input, res.Title.Value, err, expected)
-// 	}
-// }
+func TestSymbolsShouldResturnLinkStartChar(t *testing.T) {
+	input := "[test link](http://trash.com)"
+	expected := 1
 
-// func TestSymbolsShouldReturnTitleLoneNoIgnoringFrontmatter(t *testing.T) {
-// 	input := `---
-// 	tags:
-// 	  - tag1
-// ---
-// # Title`
-// 	expected := 5
-//
-// 	res, err := Parse(input)
-// 	if res.Title.LineNo != expected {
-// 		failMessageInt(t, input, res.Title.LineNo, err, expected)
-// 	}
-//
-// }
+	res, err := Parse(input)
+	check := res.Links[0]
 
-// func TestSymbolsShouldReturnWikilinks(t *testing.T) {
-// 	input := "[[wikilink]]"
-// 	expected := "wikilink"
-//
-// 	res, err := Parse(input)
-// 	if len(res.Wikilinks) != 1 {
-// 		failMessageInt(t, input, len(res.Wikilinks), err, 1)
-// 	}
-// 	link := res.Wikilinks[0]
-// 	if link.Value != expected {
-// 		failMessageString(t, input, link.Value, err, expected)
-// 	}
-// }
+	if check.CharStart != expected {
+		failMessageInt(t, input, check.CharStart, err, expected)
+	}
+}
+
+func TestSymbolsShouldResturnLinkEndChar(t *testing.T) {
+	input := "[test link](http://trash.com)"
+	expected := len(input) + 1
+
+	res, err := Parse(input)
+	check := res.Links[0]
+
+	if check.CharEnd != expected {
+		failMessageInt(t, input, check.CharEnd, err, expected)
+	}
+}
+
 
 func itemExists(slice interface{}, item interface{}) bool {
 	s := reflect.ValueOf(slice)
