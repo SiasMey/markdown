@@ -21,11 +21,13 @@ type SymbolType string
 const (
 	HEADING1 SymbolType = "Heading1"
 	WIKILINK SymbolType = "WikiLink"
+	LINK     SymbolType = "Link"
 )
 
 type Symbols struct {
 	Title     Symbol
 	WikiLinks []Symbol
+	Links     []Symbol
 }
 
 type Parser struct {
@@ -39,6 +41,7 @@ func NewParser(s string) *Parser {
 func Parse(input string) (Symbols, error) {
 	parser := NewParser(input)
 	wikiLinks := []Symbol{}
+	links := []Symbol{}
 
 	var title Symbol
 
@@ -50,10 +53,12 @@ func Parse(input string) (Symbols, error) {
 			title = sym
 		} else if sym.Type == WIKILINK {
 			wikiLinks = append(wikiLinks, sym)
+		} else if sym.Type == LINK {
+			links = append(links, sym)
 		}
 	}
 
-	res := Symbols{Title: title, WikiLinks: wikiLinks}
+	res := Symbols{Title: title, WikiLinks: wikiLinks, Links: links}
 	return res, nil
 }
 
@@ -75,6 +80,7 @@ func (p *Parser) parseLink(start lexer.Token) (Symbol, error) {
 	charEnd := start.Column + start.Length
 	lineNr := start.LineNr
 	lit := start.Lit
+	linkType := LINK
 	val := ""
 	pairs := 1
 
@@ -85,22 +91,33 @@ func (p *Parser) parseLink(start lexer.Token) (Symbol, error) {
 			lit += tk.Lit
 			charEnd += tk.Length
 			pairs += 1
+			linkType = WIKILINK
 		} else if tk.TokenType == lexer.TEXT {
 			lit += tk.Lit
-			val += tk.Lit
 			charEnd += tk.Length
+			val += tk.Lit
 		} else if tk.TokenType == lexer.RIGHTBRK {
 			lit += tk.Lit
 			pairs -= 1
 			charEnd += tk.Length
+
 			if pairs < 1 {
-				break
+				if linkType == WIKILINK {
+					break
+				}
 			}
+		} else if tk.TokenType == lexer.LEFTPRN {
+			lit += tk.Lit
+			charEnd += tk.Length
+		} else if tk.TokenType == lexer.RIGHTPRN {
+			lit += tk.Lit
+			charEnd += tk.Length
+			break
 		}
 	}
 
 	return Symbol{
-		Type:      WIKILINK,
+		Type:      linkType,
 		Lit:       lit,
 		Value:     val,
 		LineNo:    lineNr,

@@ -65,6 +65,78 @@ func TestSymbolShouldReturnWikilinkLit(t *testing.T) {
 	}
 }
 
+func TestSymbolShouldReturnWikilinkValue(t *testing.T) {
+	input := "[[test]]"
+	expected := "test"
+
+	res, err := Parse(input)
+	if res.WikiLinks[0].Value != expected {
+		failMessageString(t, input, res.WikiLinks[0].Value, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnWikilinkType(t *testing.T) {
+	input := "[[test]]"
+	expected := WIKILINK
+
+	res, err := Parse(input)
+	if res.WikiLinks[0].Type != expected {
+		failMessageType(t, input, res.WikiLinks[0].Type, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnWikilinkCharStart(t *testing.T) {
+	input := "[[test]]"
+	expected := 1
+
+	res, err := Parse(input)
+	if res.WikiLinks[0].CharStart != expected {
+		failMessageInt(t, input, res.WikiLinks[0].CharStart, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnWikilinkCharEnd(t *testing.T) {
+	input := "[[test]]"
+	expected := len(input) + 1
+
+	res, err := Parse(input)
+	if res.WikiLinks[0].CharEnd != expected {
+		failMessageInt(t, input, res.WikiLinks[0].CharEnd, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnWikilinkLineNo(t *testing.T) {
+	input := "[[test]]"
+	expected := 0
+
+	res, err := Parse(input)
+	if res.Title.LineNo != expected {
+		failMessageInt(t, input, res.Title.LineNo, err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnTwoWikilinks(t *testing.T) {
+	input := "[[test]][[test2]]"
+	expected := 2
+
+	res, err := Parse(input)
+	if len(res.WikiLinks) != expected {
+		failMessageInt(t, input, len(res.WikiLinks), err, expected)
+	}
+}
+
+func TestSymbolsShouldReturnLink(t *testing.T) {
+	input := "[test link](http://test.com)"
+	expected := LINK
+
+	res, err := Parse(input)
+	check := res.Links[0]
+
+	if check.Type != expected {
+		failMessageType(t, input, check.Type, err, expected)
+	}
+}
+
 // func TestSymbolsShouldReturnTitleIgnoringFrontmatter(t *testing.T) {
 // 	input := `---
 // 	tags:
