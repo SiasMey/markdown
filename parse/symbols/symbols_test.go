@@ -209,7 +209,7 @@ func TestParseShouldReturnTagValue(t *testing.T) {
 	}
 }
 
-func TestParseShouldResturnTagStartChar(t *testing.T) {
+func TestParseShouldReturnTagStartChar(t *testing.T) {
 	input := "#[[test]]"
 	expected := 1
 
@@ -221,7 +221,7 @@ func TestParseShouldResturnTagStartChar(t *testing.T) {
 	}
 }
 
-func TestParseShouldResturnTagEndChar(t *testing.T) {
+func TestParseShouldReturnTagEndChar(t *testing.T) {
 	input := "#[[test]]"
 	expected := len(input) + 1
 
@@ -233,7 +233,7 @@ func TestParseShouldResturnTagEndChar(t *testing.T) {
 	}
 }
 
-func TestParseShouldResturnTagLineNr(t *testing.T) {
+func TestParseShouldReturnTagLineNr(t *testing.T) {
 	input := "#[[test]]"
 	expected := 0
 
@@ -242,6 +242,18 @@ func TestParseShouldResturnTagLineNr(t *testing.T) {
 
 	if check.LineNo != expected {
 		failMessageInt(t, input, check.LineNo, err, expected)
+	}
+}
+
+func TestParseShouldReturnHeadersValue(t *testing.T) {
+	input := "## test heading 2"
+	expected := "test heading 2"
+
+	res, err := Parse(input)
+	check := res.Headers[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
 	}
 }
 

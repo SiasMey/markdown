@@ -20,6 +20,7 @@ type SymbolType string
 
 const (
 	HEADING1 SymbolType = "Heading1"
+	HEADING2 SymbolType = "Heading2"
 	WIKILINK SymbolType = "WikiLink"
 	LINK     SymbolType = "Link"
 	TAG      SymbolType = "Tag"
@@ -31,6 +32,7 @@ type Symbols struct {
 	WikiLinks []Symbol
 	Links     []Symbol
 	Tags      []Symbol
+	Headers   []Symbol
 }
 
 type Parser struct {
@@ -46,6 +48,7 @@ func Parse(input string) (Symbols, error) {
 	wikiLinks := []Symbol{}
 	links := []Symbol{}
 	tags := []Symbol{}
+	headers := []Symbol{}
 
 	var title Symbol
 
@@ -55,6 +58,8 @@ func Parse(input string) (Symbols, error) {
 			break
 		} else if sym.Type == HEADING1 {
 			title = sym
+		} else if sym.Type == HEADING2 {
+			headers = append(headers, sym)
 		} else if sym.Type == WIKILINK {
 			wikiLinks = append(wikiLinks, sym)
 		} else if sym.Type == LINK {
@@ -69,6 +74,7 @@ func Parse(input string) (Symbols, error) {
 		WikiLinks: wikiLinks,
 		Links:     links,
 		Tags:      tags,
+		Headers:   headers,
 	}
 	return res, nil
 }
@@ -164,6 +170,10 @@ func (p *Parser) parseHashStart(start lexer.Token) (Symbol, error) {
 	hashType := HEADING1
 	gotTrailingWs := false
 	scopes := 0
+
+	if start.Length == 2 {
+		hashType = HEADING2
+	}
 
 	for {
 		if tk := p.s.Scan(); tk.TokenType == lexer.EOF {
