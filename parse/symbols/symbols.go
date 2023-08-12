@@ -23,6 +23,7 @@ const (
 	WIKILINK SymbolType = "WikiLink"
 	LINK     SymbolType = "Link"
 	TAG      SymbolType = "Tag"
+	OTHER    SymbolType = "Other"
 )
 
 type Symbols struct {
@@ -80,9 +81,18 @@ func (p *Parser) nextSymbol() (Symbol, error) {
 		return p.parseHashStart(tk)
 	case lexer.LEFTBRK:
 		return p.parseLink(tk)
+	case lexer.EOF:
+		return Symbol{}, errors.New("Nothing left to parse")
+	default:
+		return Symbol{
+			Type:      OTHER,
+			Lit:       tk.Lit,
+			Value:     tk.Lit,
+			LineNo:    tk.LineNr,
+			CharStart: tk.Column,
+			CharEnd:   tk.Column + tk.Length,
+		}, nil
 	}
-
-	return Symbol{}, errors.New("Nothing left to parse")
 }
 
 func (p *Parser) parseLink(start lexer.Token) (Symbol, error) {

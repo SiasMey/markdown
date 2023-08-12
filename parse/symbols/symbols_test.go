@@ -245,6 +245,48 @@ func TestParseShouldResturnTagLineNr(t *testing.T) {
 	}
 }
 
+func TestParseShouldReturnCombinationsTitle(t *testing.T) {
+	input := `# test header
+[Http link](http://test.com) [[arst1234]]
+	#[[test-tag]]
+`
+
+	res, err := Parse(input)
+
+	if res.Title.Value != "test header" {
+		failMessageString(t, input, res.Title.Value, err, "test header")
+	}
+}
+
+func TestParseShouldReturnCombinationsLink(t *testing.T) {
+	input := `# test header
+[Http link](http://test.com) [[arst1234]]
+	#[[test-tag]]
+`
+	expected := "http://test.com"
+
+	res, err := Parse(input)
+	check := res.Links[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
+
+func TestParseShouldReturnCombinationsWikilink(t *testing.T) {
+	input := `# test header
+[Http link](http://test.com) [[arst1234]]
+	#[[test-tag]]
+`
+	expected := "arst1234"
+
+	res, err := Parse(input)
+	check := res.WikiLinks[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
 
 func itemExists(slice interface{}, item interface{}) bool {
 	s := reflect.ValueOf(slice)
