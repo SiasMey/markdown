@@ -257,6 +257,54 @@ func TestParseShouldReturnHeadersValue(t *testing.T) {
 	}
 }
 
+func TestParseShouldReturnHeadersLit(t *testing.T) {
+	input := "## test heading 2"
+	expected := "## test heading 2"
+
+	res, err := Parse(input)
+	check := res.Headers[0]
+
+	if check.Lit != expected {
+		failMessageString(t, input, check.Lit, err, expected)
+	}
+}
+
+func TestParseShouldReturnHeadersCharStart(t *testing.T) {
+	input := "## test heading 2"
+	expected := 1
+
+	res, err := Parse(input)
+	check := res.Headers[0]
+
+	if check.CharStart != expected {
+		failMessageInt(t, input, check.CharStart, err, expected)
+	}
+}
+
+func TestParseShouldReturnHeadersCharEnd(t *testing.T) {
+	input := "## test heading 2"
+	expected := len(input) + 1
+
+	res, err := Parse(input)
+	check := res.Headers[0]
+
+	if check.CharEnd != expected {
+		failMessageInt(t, input, check.CharEnd, err, expected)
+	}
+}
+
+func TestParseShouldReturnHeadersLineNo(t *testing.T) {
+	input := "## test heading 2"
+	expected := 0
+
+	res, err := Parse(input)
+	check := res.Headers[0]
+
+	if check.LineNo != expected {
+		failMessageInt(t, input, check.CharEnd, err, expected)
+	}
+}
+
 func TestParseShouldReturnCombinationsTitle(t *testing.T) {
 	input := `# test header
 [Http link](http://test.com) [[arst1234]]
@@ -309,6 +357,22 @@ func TestParseShouldReturnCombinationsTag(t *testing.T) {
 
 	res, err := Parse(input)
 	check := res.Tags[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
+
+func TestParseShouldReturnCombinationsHeaders(t *testing.T) {
+	input := `# test header
+[Http link](http://test.com) [[arst1234]]
+	#[[test-tag]]
+	## test second header # huh
+`
+	expected := "test second header # huh"
+
+	res, err := Parse(input)
+	check := res.Headers[0]
 
 	if check.Value != expected {
 		failMessageString(t, input, check.Value, err, expected)
