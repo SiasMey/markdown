@@ -55,6 +55,16 @@ func TestSymbolsShouldReturnTitleLineNo(t *testing.T) {
 	}
 }
 
+func TestSymbolShouldReturnWikilinkLit(t *testing.T) {
+	input := "[[test]]"
+	expected := "[[test]]"
+
+	res, err := Parse(input)
+	if res.WikiLinks[0].Lit != expected {
+		failMessageString(t, input, res.WikiLinks[0].Lit, err, expected)
+	}
+}
+
 // func TestSymbolsShouldReturnTitleIgnoringFrontmatter(t *testing.T) {
 // 	input := `---
 // 	tags:
