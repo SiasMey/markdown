@@ -96,6 +96,14 @@ func (p *Parser) parseLink(start lexer.Token) (Symbol, error) {
 			lit += tk.Lit
 			charEnd += tk.Length
 			val += tk.Lit
+		} else if tk.TokenType == lexer.WS {
+			lit += tk.Lit
+			charEnd += tk.Length
+			val += tk.Lit
+		} else if tk.TokenType == lexer.ILLEGAL {
+			lit += tk.Lit
+			charEnd += tk.Length
+			val += tk.Lit
 		} else if tk.TokenType == lexer.RIGHTBRK {
 			lit += tk.Lit
 			pairs -= 1
@@ -108,6 +116,7 @@ func (p *Parser) parseLink(start lexer.Token) (Symbol, error) {
 			}
 		} else if tk.TokenType == lexer.LEFTPRN {
 			lit += tk.Lit
+			val = ""
 			charEnd += tk.Length
 		} else if tk.TokenType == lexer.RIGHTPRN {
 			lit += tk.Lit

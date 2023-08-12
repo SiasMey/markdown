@@ -137,6 +137,18 @@ func TestSymbolsShouldReturnLink(t *testing.T) {
 	}
 }
 
+func TestSymbolsShouldReturnLinkValue(t *testing.T) {
+	input := "[test link](http://test.com)"
+	expected := "http://test.com"
+
+	res, err := Parse(input)
+	check := res.Links[0]
+
+	if check.Value != expected {
+		failMessageString(t, input, check.Value, err, expected)
+	}
+}
+
 // func TestSymbolsShouldReturnTitleIgnoringFrontmatter(t *testing.T) {
 // 	input := `---
 // 	tags:
