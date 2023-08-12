@@ -173,6 +173,18 @@ func TestSymbolsShouldResturnLinkEndChar(t *testing.T) {
 	}
 }
 
+func TestSymbolsShouldResturnLinkLineNr(t *testing.T) {
+	input := "[test link](http://trash.com)"
+	expected := 0
+
+	res, err := Parse(input)
+	check := res.Links[0]
+
+	if check.LineNo != expected {
+		failMessageInt(t, input, check.LineNo, err, expected)
+	}
+}
+
 
 func itemExists(slice interface{}, item interface{}) bool {
 	s := reflect.ValueOf(slice)
